@@ -1,4 +1,4 @@
-package udhaya.example.ecommercewebsite.service;
+package udhaya.example.ecommercewebsite.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,6 @@ public class ProductService {
     }
 
     public Product addProduct(ProductRequest request) {
-
         Product product = new Product();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
@@ -40,21 +39,17 @@ public class ProductService {
         product.setStock(request.getStock());
         product.setCategory(request.getCategory());
         product.setImageUrl(request.getImageUrl());
-
         return productRepository.save(product);
     }
 
     public Product updateProduct(Long id, ProductRequest request) {
-
         Product product = getProductById(id);
-
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
         product.setCategory(request.getCategory());
         product.setImageUrl(request.getImageUrl());
-
         return productRepository.save(product);
     }
 
