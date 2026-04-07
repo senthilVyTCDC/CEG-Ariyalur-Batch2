@@ -21,6 +21,7 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    // ✅ FIXED: int → BigDecimal
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", message = "Price must be non-negative")
     @Column(nullable = false, precision = 10, scale = 2)
@@ -42,7 +43,7 @@ public class Product {
     public Product() {
     }
 
-    // ✅ Parameterized constructor
+    // ✅ Parameterized constructor (already correct)
     public Product(String name, String description, BigDecimal price, Integer stock, String category) {
         this.name = name;
         this.description = description;
@@ -73,10 +74,12 @@ public class Product {
         this.description = description;
     }
 
+    // ✅ FIXED getter
     public BigDecimal getPrice() {
         return price;
     }
 
+    // ✅ FIXED setter
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
