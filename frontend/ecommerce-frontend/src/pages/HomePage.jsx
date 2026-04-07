@@ -135,7 +135,7 @@ function HomePage() {
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-extrabold text-gray-800">
-            🔥 All Products
+             All Products
           </h2>
           <span className="text-sm text-gray-400">
             {products.length} products found
@@ -156,7 +156,7 @@ function HomePage() {
           <div className="text-center py-24 text-gray-400 animate-fadeIn">
             <div className="text-6xl mb-4">📦</div>
             <p className="text-xl font-semibold">No products found</p>
-            <p className="text-sm mt-2">Backend connect aana products varum!</p>
+            <p className="text-sm mt-2">if backend is connected then products will be displayed here</p>
           </div>
 
         ) : (

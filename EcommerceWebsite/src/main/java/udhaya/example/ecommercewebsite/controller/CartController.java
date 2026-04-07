@@ -21,39 +21,30 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
+    // ✅ Get Cart Items
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse> getCart(@PathVariable Long userId) {
-        try {
-            List<Cart> cartItems = cartService.getCartItems(userId);
-            return ResponseEntity.ok(ApiResponse.ok("Cart items retrieved", cartItems));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
-        }
+        List<Cart> cartItems = cartService.getCartItems(userId);
+        return ResponseEntity.ok(ApiResponse.ok("Cart items retrieved", cartItems));
     }
 
-    @PostMapping("/{userId}")
+    // ✅ Add to Cart (FIXED 🔥)
+    @PostMapping("/{userId}/add")
     public ResponseEntity<ApiResponse> addToCart(
             @PathVariable Long userId,
             @Valid @RequestBody CartRequest request) {
 
-        try {
-            Cart cartItem = cartService.addToCart(userId, request);
-            return ResponseEntity.ok(ApiResponse.ok("Item added to cart", cartItem));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
-        }
+        Cart cartItem = cartService.addToCart(userId, request);
+        return ResponseEntity.ok(ApiResponse.ok("Item added to cart", cartItem));
     }
 
+    // ✅ Remove item
     @DeleteMapping("/{userId}/item/{cartItemId}")
     public ResponseEntity<ApiResponse> removeFromCart(
             @PathVariable Long userId,
             @PathVariable Long cartItemId) {
 
-        try {
-            cartService.removeFromCart(userId, cartItemId);
-            return ResponseEntity.ok(ApiResponse.ok("Item removed from cart", null));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
-        }
+        cartService.removeFromCart(userId, cartItemId);
+        return ResponseEntity.ok(ApiResponse.ok("Item removed from cart", null));
     }
 }
