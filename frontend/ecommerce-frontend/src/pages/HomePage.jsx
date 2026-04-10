@@ -7,14 +7,17 @@ function HomePage() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
   const [products, setProducts] = useState([])
+  const [filtered, setFiltered] = useState([])
   const [loading, setLoading] = useState(true)
   const [cartCount, setCartCount] = useState(0)
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     API.get('/products')
       .then(res => {
         if (res.data.success) {
           setProducts(res.data.data)
+          setFiltered(res.data.data)
         }
         setLoading(false)
       })
@@ -33,6 +36,20 @@ function HomePage() {
     }
   }, [user])
 
+  // Search filter
+  const handleSearch = (e) => {
+    const val = e.target.value
+    setSearch(val)
+    if (val.trim() === '') {
+      setFiltered(products)
+    } else {
+      setFiltered(products.filter(p =>
+        p.name.toLowerCase().includes(val.toLowerCase()) ||
+        p.category.toLowerCase().includes(val.toLowerCase())
+      ))
+    }
+  }
+
   const handleLogout = () => {
     logout()
     navigate('/login')
@@ -44,7 +61,7 @@ function HomePage() {
       return
     }
     try {
-      await API.post(`/cart/${user.id}`, {
+      await API.post(`/cart/${user.id}/add`, {
         productId: product.id,
         quantity: 1
       })
@@ -67,10 +84,29 @@ function HomePage() {
           </h1>
         </div>
 
+        {/* Search Bar */}
+        <div className="hidden md:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 w-72 focus-within:border-orange-400 transition">
+          <span className="text-gray-400">🔍</span>
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={search}
+            onChange={handleSearch}
+            className="bg-transparent text-sm outline-none w-full text-gray-700 placeholder-gray-400"
+          />
+          {search && (
+            <span
+              onClick={() => { setSearch(''); setFiltered(products) }}
+              className="text-gray-400 cursor-pointer hover:text-orange-500 text-xs"
+            >
+              ✕
+            </span>
+          )}
+        </div>
+
         <div className="flex items-center gap-3">
           {user ? (
             <>
-              {/* Cart button */}
               <button
                 onClick={() => navigate('/cart')}
                 className="relative btn-shine bg-orange-50 hover:bg-orange-100 text-orange-500 px-4 py-2 rounded-xl text-sm font-semibold transition"
@@ -82,14 +118,10 @@ function HomePage() {
                   </span>
                 )}
               </button>
-
-              {/* User greeting */}
               <div className="hidden sm:flex items-center gap-2 bg-orange-50 px-3 py-2 rounded-xl">
                 <span className="text-lg">👋</span>
                 <span className="text-sm font-semibold text-gray-700">{user.name}</span>
               </div>
-
-              {/* Logout */}
               <button
                 onClick={handleLogout}
                 className="btn-shine bg-red-50 hover:bg-red-100 text-red-400 text-sm px-4 py-2 rounded-xl transition font-semibold"
@@ -107,6 +139,28 @@ function HomePage() {
           )}
         </div>
       </nav>
+
+      {/* Mobile Search */}
+      <div className="md:hidden px-4 py-3 bg-white border-b border-gray-100">
+        <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus-within:border-orange-400 transition">
+          <span className="text-gray-400">🔍</span>
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={search}
+            onChange={handleSearch}
+            className="bg-transparent text-sm outline-none w-full text-gray-700 placeholder-gray-400"
+          />
+          {search && (
+            <span
+              onClick={() => { setSearch(''); setFiltered(products) }}
+              className="text-gray-400 cursor-pointer hover:text-orange-500 text-xs"
+            >
+              ✕
+            </span>
+          )}
+        </div>
+      </div>
 
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 text-white py-14 px-6 text-center relative overflow-hidden">
@@ -135,14 +189,13 @@ function HomePage() {
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-extrabold text-gray-800">
-             All Products
+            🔥 {search ? `Results for "${search}"` : 'All Products'}
           </h2>
           <span className="text-sm text-gray-400">
-            {products.length} products found
+            {filtered.length} products found
           </span>
         </div>
 
-        {/* Loading */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <svg className="animate-spin h-10 w-10 text-orange-400" fill="none" viewBox="0 0 24 24">
@@ -152,22 +205,27 @@ function HomePage() {
             <p className="text-gray-400 font-medium">Loading products...</p>
           </div>
 
-        ) : products.length === 0 ? (
+        ) : filtered.length === 0 ? (
           <div className="text-center py-24 text-gray-400 animate-fadeIn">
-            <div className="text-6xl mb-4">📦</div>
+            <div className="text-6xl mb-4">🔍</div>
             <p className="text-xl font-semibold">No products found</p>
-            <p className="text-sm mt-2">if backend is connected then products will be displayed here</p>
+            <p className="text-sm mt-2">Try searching something else!</p>
+            <button
+              onClick={() => { setSearch(''); setFiltered(products) }}
+              className="mt-4 btn-shine bg-orange-500 text-white px-6 py-2 rounded-xl font-semibold text-sm"
+            >
+              Clear Search
+            </button>
           </div>
 
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((p, index) => (
+            {filtered.map((p, index) => (
               <div
                 key={p.id}
                 className="card-hover bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col animate-fadeIn"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                {/* Product Image */}
                 <div className="bg-gradient-to-br from-orange-50 to-yellow-50 h-44 flex items-center justify-center text-6xl">
                   {p.imageUrl ? (
                     <img
@@ -177,8 +235,6 @@ function HomePage() {
                     />
                   ) : '🛍️'}
                 </div>
-
-                {/* Product Info */}
                 <div className="p-4 flex flex-col gap-2 flex-1">
                   <span className="text-xs font-semibold text-orange-400 bg-orange-50 px-2 py-0.5 rounded-full w-fit">
                     {p.category}
@@ -189,7 +245,6 @@ function HomePage() {
                   {p.description && (
                     <p className="text-xs text-gray-400 line-clamp-2">{p.description}</p>
                   )}
-
                   <div className="flex items-center justify-between mt-1">
                     <p className="text-orange-500 font-extrabold text-lg">
                       ₹{p.price}
@@ -198,8 +253,6 @@ function HomePage() {
                       {p.stock > 0 ? `✅ ${p.stock} left` : '❌ Out of stock'}
                     </span>
                   </div>
-
-                  {/* Add to Cart */}
                   <button
                     onClick={() => handleAddToCart(p)}
                     disabled={p.stock === 0}

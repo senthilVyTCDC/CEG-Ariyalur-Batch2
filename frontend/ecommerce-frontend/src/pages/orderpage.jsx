@@ -65,7 +65,6 @@ function OrderPage() {
   return (
     <div className="min-h-screen bg-gray-50 page-transition">
 
-      {/* Navbar */}
       <nav className="bg-white shadow-sm px-6 py-4 flex justify-between items-center sticky top-0 z-50 border-b border-orange-100">
         <div className="flex items-center gap-2">
           <span className="text-2xl">😊</span>
@@ -94,14 +93,10 @@ function OrderPage() {
             </svg>
             <p className="text-gray-400">Loading...</p>
           </div>
-
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            {/* Left — Shipping Address */}
             <div className="flex flex-col gap-6">
-
-              {/* Address Form */}
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 animate-fadeIn">
                 <h3 className="font-bold text-gray-800 text-lg mb-4">
                   📍 Shipping Address
@@ -116,7 +111,6 @@ function OrderPage() {
                   rows={4}
                   className="w-full border-2 border-gray-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-400 transition-all duration-200 bg-gray-50 focus:bg-white resize-none"
                 />
-
                 {error && (
                   <div className="mt-3 bg-red-50 border border-red-200 rounded-xl px-4 py-3 animate-fadeIn">
                     <p className="text-red-500 text-sm">⚠️ {error}</p>
@@ -124,7 +118,6 @@ function OrderPage() {
                 )}
               </div>
 
-              {/* User Info */}
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 animate-fadeIn">
                 <h3 className="font-bold text-gray-800 text-lg mb-4">
                   👤 Customer Details
@@ -142,10 +135,7 @@ function OrderPage() {
               </div>
             </div>
 
-            {/* Right — Order Summary */}
             <div className="flex flex-col gap-6">
-
-              {/* Items */}
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 animate-fadeIn">
                 <h3 className="font-bold text-gray-800 text-lg mb-4">
                   🛍️ Order Items
@@ -176,7 +166,6 @@ function OrderPage() {
                 </div>
               </div>
 
-              {/* Price Summary */}
               <div className="bg-white rounded-2xl shadow-sm border border-orange-100 p-6 animate-fadeIn">
                 <h3 className="font-bold text-gray-800 text-lg mb-4">
                   💰 Price Summary
@@ -200,8 +189,6 @@ function OrderPage() {
                     <span className="text-orange-500">₹{getTotal()}</span>
                   </div>
                 </div>
-
-                {/* Place Order Button */}
                 <button
                   onClick={handlePlaceOrder}
                   disabled={placing || cartItems.length === 0}
@@ -218,16 +205,14 @@ function OrderPage() {
                   ) : 'Place Order 🎉'}
                 </button>
               </div>
-
             </div>
           </div>
         )}
       </div>
 
-      {/* Footer */}
       <footer className="bg-white border-t border-gray-100 text-center py-6 mt-10">
         <p className="text-gray-400 text-sm">
-          © 2025 <span className="text-orange-500 font-semibold">SmileMart</span> — Made with 😊
+          © 2026 <span className="text-orange-500 font-semibold">SmileMart</span> — Made with 😊
         </p>
       </footer>
 
